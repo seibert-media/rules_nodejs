@@ -258,6 +258,9 @@ def _yarn_install_impl(repository_ctx):
         str(repository_ctx.attr.network_timeout * 1000),  # in ms
     ]
 
+    if repository_ctx.attr.ignore_engines:
+        args.append("--ignore-engines")
+
     if repository_ctx.attr.prod_only:
         args.append("--prod")
     if not repository_ctx.attr.use_global_yarn_cache:
@@ -303,6 +306,10 @@ yarn_install = repository_rule(
             have bugs.
             Disabling this attribute causes every run of yarn to have a unique
             cache_directory.""",
+        ),
+        "ignore_engines": attr.bool(
+            default = False,
+            doc = """Ignore the yarn engine check.""",
         ),
         "yarn_lock": attr.label(
             mandatory = True,
